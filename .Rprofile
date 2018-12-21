@@ -1,0 +1,1 @@
+.libPaths(c("C:/Users/ag/Downloads/statistics_R/lib ", .libPaths()))

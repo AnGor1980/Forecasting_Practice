@@ -1,0 +1,87 @@
+---
+title: "Chapter 2 Time series graphics"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(fpp2)
+library(GGally)
+```
+
+##ts objects
+```{r r1}
+y <- ts(c(123,39,78,52,110), start=2012)
+```
+
+##Time plots
+```{r r2}
+autoplot(melsyd[,"Economy.Class"]) +
+  ggtitle("Economy class passengers: Melbourne-Sydney") +
+  xlab("Year") +
+  ylab("Thousands")
+
+hist(melsyd[,"Economy.Class"])
+shapiro.test(melsyd[,"Economy.Class"])
+
+autoplot(a10) +
+  ggtitle("Antidiabetic drug sales") +
+  ylab("$ million") +
+  xlab("Year")
+```
+
+##Seasonal plots
+```{r r3}
+ggseasonplot(a10, year.labels=TRUE, year.labels.left=TRUE) +
+  ylab("$ million") +
+  ggtitle("Seasonal plot: antidiabetic drug sales")
+
+ggseasonplot(a10, polar=TRUE) +
+  ylab("$ million") +
+  ggtitle("Polar seasonal plot: antidiabetic drug sales")
+```
+
+##Seasonal subseries plots
+```{r r4}
+ggsubseriesplot(a10) +
+  ylab("$ million") +
+  ggtitle("Seasonal subseries plot: antidiabetic drug sales")
+```
+
+##Scatterplots
+```{r r5}
+autoplot(elecdemand[,c("Demand","Temperature")], facets=TRUE) +
+  xlab("Year: 2014") + ylab("") +
+  ggtitle("Half-hourly electricity demand: Victoria, Australia")
+
+qplot(Temperature, Demand, data=as.data.frame(elecdemand)) +
+  ylab("Demand (GW)") + xlab("Temperature (Celsius)")
+
+autoplot(visnights[,1:5], facets=TRUE) +
+  ylab("Number of visitor nights each quarter (millions)")
+
+GGally::ggpairs(as.data.frame(visnights[,1:5]))
+```
+
+##Lag plots
+```{r r6}
+beer2 <- window(ausbeer, start=1972)
+gglagplot(beer2)
+ggAcf(beer2)
+```
+
+##Autocorrelation
+```{r r7}
+aelec <- window(elec, start=1980)
+autoplot(aelec) + xlab("Year") + ylab("GWh")
+ggAcf(aelec, lag=48)
+gglagplot(aelec, lag=3)
+```
+
+##White noise
+```{r r8}
+set.seed(30)
+y <- ts(rnorm(50))
+autoplot(y) + ggtitle("White noise")
+ggAcf(y)
+```
